@@ -9,7 +9,8 @@ const userRouter = require("./routers/userRouter");
 const viewRouter = require("./routers/viewRouter");
 const bookingRouter= require("./routers/bookingRouter");
 app.use(cors());
-app.post("/Webhooks-checkout",bookingController.createBooking,bodyParser.raw({type: 'application/json'}));
+app.use(bodyParser.raw({type: 'application/json'}));
+app.post("/Webhooks-checkout",bookingController.createBooking);
 // converts buffer to json
 app.use(express.json());
 // => static files
