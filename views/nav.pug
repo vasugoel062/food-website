@@ -1,0 +1,22 @@
+nav
+  ul.navigation
+    li.nav-line
+      a.white-anchors.active(href='#feature-section') FEATURES
+    li.nav-line
+      a.white-anchors(href='') DETAILS
+    li.nav-line
+      a.white-anchors(href='') REVIEWS
+    if user
+      li.nav-line
+        a.white-anchors(href='/plans') PLANS
+    else
+      li.nav-line
+        a.white-anchors(href='/login') PLANS
+    if user
+      li.nav-line
+        a.white-anchors(href='http://localhost:3000/me') #{user.name}
+      li.nav-line
+        a.white-anchors(href='/logout')  LOGOUT
+    else
+      li.nav-line
+        a.white-anchors(href='/login') LOGIN

@@ -1,0 +1,10 @@
+extend base 
+block content
+  h2 Name   #{user.name}
+  h2 Email  #{user.email}
+  if user.phone 
+    h2 phone #{user.phone}
+  h2 photo 
+    img(src=`${user.photo}`, alt="").img-Size
+  h2  
+    a(href="/updateUser") Update user
