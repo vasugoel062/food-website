@@ -65,7 +65,7 @@ module.exports.createCheckoutSession=async function(req,res){
         success:"New Plan Added"
       });
     }
-    module.exports.createBooking = async function (req,res){
+    module.exports.createBooking = async function (request,response){
       const sig = request.headers['stripe-signature'];
       let event;
       const endpointSecret = END_POINT_SECRET;
