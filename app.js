@@ -1,11 +1,15 @@
 const express = require("express");
+const bodyParser = require("body-parser");//stripe needs data in form of stream
 const cookieParser = require("cookie-parser");
+const bookingController = require("./controllers/bookingController")
 const app = express();
 // const users = require("./data/users");
 const planRouter = require("./routers/planRouter");
 const userRouter = require("./routers/userRouter");
 const viewRouter = require("./routers/viewRouter");
 const bookingRouter= require("./routers/bookingRouter");
+app.use(bodyParser.raw({type: 'application/json'}));
+app.post("/Webhooks-checkout",bookingController.createBooking)
 // converts buffer to json
 app.use(express.json());
 // => static files

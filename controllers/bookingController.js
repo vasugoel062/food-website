@@ -3,6 +3,7 @@ const userModel = require("../models/userModel");
 const bookingModel = require("../models/bookingModel");
 const SK = process.env.SK;
 const stripe = require('stripe')(SK);
+const END_POINT_SECRET= process.env.EPK;
 module.exports.createCheckoutSession=async function(req,res){
     const id = req.params.id;
     const plan = await planModel.findById(id);
@@ -22,11 +23,11 @@ module.exports.createCheckoutSession=async function(req,res){
           session
       })
     }
-    module.exports.createNewBooking = async function(req,res){
+    module.exports.createNewBooking = async function(userEmail,planName){
+      const user = await userModel.findOne(userEmail);
+      const plan = await planModel.findOne(planName);
       const planId = req.body.planId;
       const userId = req.body.userId;
-      const user = await userModel.findById(userId);
-      const plan = await planModel.findById(planId);
       if(user.userBookedPlansId==undefined){
         const order = {
           userId: userId,
@@ -63,4 +64,20 @@ module.exports.createCheckoutSession=async function(req,res){
         newbooking,
         success:"New Plan Added"
       });
+    }
+    module.exports.createBooking = async function (req,res){
+      const sig = request.headers['stripe-signature'];
+      let event;
+      const endpointSecret = END_POINT_SECRET;
+      try{
+        event = stripe.webhooks.constructEvent(req.body,sig,endpointSecret);
+        if(event.type=="payment_intent.succeeded"){
+          const userEmail = event.data.object.customer_email;
+          const planName = event.data.object.line_items[0].name;
+          await this.createNewBooking(userEmail,planName);
+          response.json({received:true});
+        }
+      }catch(err){
+        response.status(400).send(`Webhook Error: ${err.message}`);
+      }
     }
